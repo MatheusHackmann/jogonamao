@@ -1,0 +1,34 @@
+.form-cadastro-jogo {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+/* CSS DA PÁGINA DE JOGOS PARA APOSTAR */
+table.e th, td {
+	padding: 4px !important;
+	text-align: center;
+}
+table.e th {
+	color: grey;
+}
+table.e .options {
+	background-color: rgb(33, 150, 243);
+	height: 38px !important;
+	color: #fff;
+}
+table.e .moreOptions {
+	background-color: #ff4500 !important;
+}
+
+.form-attJogos {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
