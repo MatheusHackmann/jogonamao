@@ -3,6 +3,28 @@ require_once("Sql.php");
 
 class Jogos{
 
+	public function cadastrarCopas($nomeCopa)
+	{	
+		$sql = new Sql();
+
+		$copaExiste = $sql->select("SELECT * FROM copas WHERE nome_copa = :NOME;", array(
+			":NOME" => utf8_decode($nomeCopa)
+		));
+
+		if (count($copaExiste) > 0) {
+			return false;
+			exit();
+		}
+		else {
+			$sql->query("INSERT INTO copas (nome_copa) VALUES (:NOME);", array(
+				":NOME" => utf8_decode($nomeCopa)
+			));
+
+			return true;
+		}
+
+	}
+
 	public function buscarCopas()
 	{
 		$sql = new Sql();
@@ -57,7 +79,9 @@ class Jogos{
 	{
 		$sql = new Sql();
 
-		$copas = $sql->select("SELECT c.*, GROUP_CONCAT(id SEPARATOR ',') AS jogos FROM copas as c INNER JOIN jogos as j ON c.id_copa = j.fk_copa AND j.status_jogo = 'Pendente' GROUP BY c.id_copa;");
+		$copas = $sql->select("SELECT c.*, GROUP_CONCAT(id SEPARATOR ',') AS jogos FROM copas as c INNER JOIN jogos as j ON c.id_copa = j.fk_copa AND j.status_jogo = 'Pendente' WHERE data_jogo = :DATA AND (hora_jogo >= :HORA) GROUP BY c.id_copa;", array(
+			":DATA" => date('Y-m-d'),
+			":HORA" => date('H:i:s')));
 
 		return $copas;
 	}

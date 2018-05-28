@@ -5,22 +5,41 @@ class Apostas {
 
 	public function criarBilhete($cliente, $totalCotas, $valorApostado, $retorno, $situacao, $jogos){
 
+		echo "
+		<pre>
+		$cliente
+		$totalCotas
+		$valorApostado
+		$retorno
+		$situacao
+		</pre>";
+		echo "<br><br>";
+		print_r($jogos);
+
 		//Arredonda o valor das variaveis e limita para 2 decimais
 		$totalCotas = number_format(floatval($totalCotas), 2, ".", ".");
-		$retorno = number_format(floatval($retorno), 2, ".", ".");
+		$retorno1 = number_format(floatval($retorno), 2, ".", ".");
 
 		//Gera um código único de bilhete
 		$codBilhete = strtoupper(substr(md5(date("YmdHis")), 1, 6));
 
 		$sql = new Sql();
 
-		$sql->query("INSERT INTO apostas (cod_bilhete, cliente, cotas, valor_aposta, retorno, situacao) VALUES (:CODBILHETE, :CLIENTE, :COTAS, :VALORAPOSTA, :RETORNO, :SITUACAO);", array(
+		$sql->query("INSERT INTO apostas (cod_bilhete, cliente, cotas, valor_aposta, retorno, situacao, data_bilhete, status_pagamento) VALUES (:CODBILHETE, :CLIENTE, :COTAS, :VALORAPOSTA, :RETORNO, :SITUACAO, :DATA, :STATUS);", array(
 			":CODBILHETE" => $codBilhete,
 			":CLIENTE" => utf8_decode($cliente),
 			":COTAS" => $totalCotas,
 			":VALORAPOSTA" => $valorApostado,
-			":RETORNO" => $retorno,
-			":SITUACAO" => $situacao
+			":RETORNO" => $retorno1,
+			":SITUACAO" => $situacao,
+			":DATA" => date('Y-m-d'),
+			":STATUS" => "Pendente"
+		));
+
+		$sql->query("INSERT INTO valor_apostas (fk_cod_bilhete, valor_aposta, data_aposta) VALUES (:FKCODBILHETE, :VALORAPOSTA, :DATA);", array(
+			":FKCODBILHETE" => $codBilhete,
+			":VALORAPOSTA" => $valorApostado,
+			":DATA" => date('Y-m-d')
 		));
 
 		foreach ($jogos as $jogo) {
@@ -37,26 +56,23 @@ class Apostas {
 					":SITUACAO" => "Pendente"
 				));				
 			}
+			else {
+
+			}
 		}
 	}
 
-	private function verificarJogosBilhete($codBilhete){
+	public function gerarGanhadores(){
 		
 		$sql = new Sql();
 
-		$verificarExistenciaBilhete = $sql->select("SELECT * FROM apostas WHERE cod_bilhete = :CODBILHETE;", array(
-			":CODBILHETE" => $codBilhete
-		));
+		//Seleciona todos os bilhetes
+		$bilhetes = $sql->select("SELECT cod_bilhete FROM apostas;");
 
-		//Verifica se bilhete não existir, retorna false
-		if (count($verificarExistenciaBilhete) == 0) {
-			return false;
-			exit();
-		}else {
-
+		foreach ($bilhetes as $codBilhete) {
 			$jogosBilhete = $sql->select("SELECT * FROM ap_jogos WHERE fk_cod_bilhete = :CODBILHETE;", array(
-				":CODBILHETE" => $codBilhete
-			));
+				":CODBILHETE" => $codBilhete['cod_bilhete']
+			));	
 
 			$situacaoJogo = true;
 
@@ -64,67 +80,67 @@ class Apostas {
 				if ($jogosBilhete[$i]['situacao'] === "Pendente") {
 					$situacaoJogo = false;
 				}
-			}
 
-			//Se todos os jogos da aposta estiverem concluidos, analisa qual a escolha ganhadora de cada jogo, verifica se a escolha do bilhete é diferente de todas, se for, seta o bilhete como perdedor
-			if ($situacaoJogo == true) {
-				for ($i=0; $i < count($jogosBilhete); $i++) { 
+				if ($situacaoJogo == true) {
+					
 					$infoJogo = $sql->select("SELECT esc_1, esc_2, esc_3, esc_4 FROM jogos WHERE id = :ID;", array(
 						":ID" => $jogosBilhete[$i]['jogo']
 					));
 
-					if (($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_1']) 
-						&&
-						($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_2']) 
-						&& 
-						($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_3']) 
-						&&
-						($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_4'])) {
+					if (($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_1']) && ($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_2']) && ($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_3']) && ($jogosBilhete[$i]['escolha'] != $infoJogo[0]['esc_4'])) {
 
+						$sql->query("UPDATE apostas SET situacao = :SITUACAO, status_pagamento = :STATUS WHERE cod_bilhete = :BILHETE;", array(
+							":SITUACAO" => "Perdeu",
+							":STATUS" => "Pendente",
+							":BILHETE" => $codBilhete['cod_bilhete']
+						));
+						break;
+
+					}
+					else {
 						$sql->query("UPDATE apostas SET situacao = :SITUACAO WHERE cod_bilhete = :BILHETE;", array(
-							":BILHETE" => $codBilhete,
-							":SITUACAO" => "Perdeu"
+							":SITUACAO" => "Ganhou",
+							":BILHETE" => $codBilhete['cod_bilhete']
 						));						
-				}else {
-					$sql->query("UPDATE apostas SET situacao = :SITUACAO WHERE cod_bilhete = :BILHETE;", array(
-						":BILHETE" => $codBilhete,
-						":SITUACAO" => "Ganhou"
-					));					
+					}				
 				}
-			}				
-			return true;
+			}					
 		}
 	}
 
-}
+	public function attStatusPagamento($codBilhete)
+	{
+		$sql = new Sql();
 
-public function verificarBilhete($codBilhete){
-
-	$existenciaBilhete = $this->verificarJogosBilhete($codBilhete);
-
-		//Se retornar false, não existe nenhum bilhete com o código informado
-	if ($existenciaBilhete == false) {
-		return false;
-		exit();
+		$sql->query("UPDATE apostas SET status_pagamento = :STATUS WHERE cod_bilhete = :CODBILHETE;", array(
+			":STATUS" => "Pago",
+			":CODBILHETE" => $codBilhete
+		));
 	}
 
-	$sql = new Sql();
+	public function exibirGanhadores($data){
 
-	$infoBilhete = $sql->select("SELECT * FROM apostas WHERE cod_bilhete = :CODBILHETE;", array(
-		":CODBILHETE" => $codBilhete
-	));
+		$sql = new Sql();
 
-	foreach ($infoBilhete as $bilhete) {
-			//Se situacao do bilhete for pendente, retorna false, se não retorna true
-		if ($bilhete['situacao'] === "Pendente") {
-			return 0;
-		}else if ($bilhete['situacao'] === "Perdeu") {
-			return false;
-		}else {
-			return true;
-		}
+		$ganhadores = $sql->select("SELECT a.*, GROUP_CONCAT(jogo SEPARATOR ',') AS ap_jogos FROM apostas as a INNER JOIN ap_jogos as aj ON a.cod_bilhete = aj.fk_cod_bilhete  WHERE a.situacao = :SITUACAO AND data_bilhete = :DATA GROUP BY a.cod_bilhete ORDER BY status_pagamento = :STATUS DESC;", array(
+			":SITUACAO" => "Ganhou",
+			":DATA" => $data,
+			":STATUS" => "Pendente"
+		));	
+
+		return $ganhadores;
 	}
 
-}
+	public function exibirPerdedores($data){
+
+		$sql = new Sql();
+
+		$perdedores = $sql->select("SELECT a.*, GROUP_CONCAT(jogo SEPARATOR ',') AS ap_jogos FROM apostas as a INNER JOIN ap_jogos as aj ON a.cod_bilhete = aj.fk_cod_bilhete  WHERE a.situacao = :SITUACAO AND data_bilhete = :DATA GROUP BY a.cod_bilhete ;", array(
+			":SITUACAO" => "Perdeu",
+			":DATA" => $data
+		));	
+
+		return $perdedores;
+	}
 
 }

@@ -19,7 +19,7 @@
 						$resultadoJogosPendentes = $jogosPendentes->jogosPendentes();
 
 						for ($i=0; $i < count($resultadoJogosPendentes); $i++) { 
-							$times = $resultadoJogosPendentes[$i]['time_casa']." X ".$resultadoJogosPendentes[$i]['time_fora'];
+							$times = utf8_encode($resultadoJogosPendentes[$i]['time_casa'])." X ".utf8_encode($resultadoJogosPendentes[$i]['time_fora']);
 							$idJogo = $resultadoJogosPendentes[$i]['id'];
 							$dataJogo = $resultadoJogosPendentes[$i]['data_jogo'];
 							$horaJogo = $resultadoJogosPendentes[$i]['hora_jogo'];

@@ -6,6 +6,22 @@
 	margin-top: 30px;
 	margin-bottom: 30px;
 }
+.form-cadastro-copa {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.form-cadastro-usuario {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
 
 /* CSS DA PÁGINA DE JOGOS PARA APOSTAR */
 table.e th, td {
@@ -24,11 +40,39 @@ table.e .moreOptions {
 	background-color: #ff4500 !important;
 }
 
-.form-attJogos {
+.table-ganhadores {
 	background-color: #fff;
 	border-radius: 7px;
 	box-shadow: 0px 0px 5px #4d636f !important;
 	padding: 20px;
 	margin-top: 30px;
 	margin-bottom: 30px;
+}
+.data-ganhadores {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-right: 10px;
+	height: 10%;
+}
+.form-attResultados {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.data-perdedores {
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 0px 0px 5px #4d636f !important;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-right: 10px;
+	height: 10%;
 }

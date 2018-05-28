@@ -17,9 +17,9 @@
 			<?php
 			require_once("../classes/Apostas.php");
 			if ($_POST) {
-				$teste = new Apostas();
+				$criarBilhete = new Apostas();
 
-				$teste->criarBilhete($_POST['cliente'], $_POST['valor_cotas'], $_POST['valor'], $_POST['possivel_retorno'], "Pendente", $_POST['apostas']);
+				$criarBilhete->criarBilhete($_POST['cliente'], $_POST['valor_cotas'], $_POST['valor'], $_POST['possivel_retorno'], "Pendente", $_POST['apostas']);
 			}
 			?>
 
@@ -75,7 +75,8 @@
 			</div>
 		</div>
 		<div class="offset-md-1 col-12 col-md-8 col-lg-8 form-cadastro-jogo">
-			<h3>Partidas Disponíveis</h3>			
+			<h3>Partidas Disponíveis</h3>
+			<h6><i><?php echo date("d/m/Y")." - ".date("H:i:s"); ?></i></h6>			
 
 
 			<?php
@@ -93,7 +94,7 @@
 				echo "
 
 				<div class='row' style='background-color: rgb(25, 118, 210); color: #fff; border-radius: 5px;'>
-				<p><b>".$copa['nome_copa']."</b></p>
+				<p><b>".utf8_encode($copa['nome_copa'])."</b></p>
 				</div>
 				<div class='row' style='margin-top: 10px;'>
 				<table class='table e'>
@@ -118,7 +119,7 @@
 
 					foreach ($jogosDisponiveis as $jogo) {
 						if ($copa['id_copa'] == $jogo['fk_copa']) {
-							$dataHora = $jogo['data_jogo'] . " - " . $jogo['hora_jogo'];
+							$dataHora = date('d/m/Y', strtotime($jogo['data_jogo'])) . " - " . $jogo['hora_jogo'];
 
 							echo "
 							<tr id='linha".$jogo['id']."'>
@@ -228,7 +229,7 @@
 							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Fora','".$jogo['ap_fora']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_fora']."</button></td>";
 
 							echo "
-							<td style='width: 70%;text-align: right;'><b>".$jogo['time_casa']." X ".$jogo['time_fora']."</b><br><i style='color: #1976D2;'>".$dataHora."</i></td>";							
+							<td style='width: 70%;text-align: right;'><b>".utf8_encode($jogo['time_casa'])." X ".utf8_encode($jogo['time_fora'])."</b><br><i style='color: #1976D2;'>".$dataHora."</i></td>";							
 							echo "
 							</tr>
 							";

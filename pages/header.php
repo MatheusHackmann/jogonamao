@@ -1,3 +1,5 @@
+<?php date_default_timezone_set('America/Sao_Paulo'); ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -26,6 +28,7 @@
 				</a>
 				<div class="dropdown-menu">
 					<a class="dropdown-item" href="cad_jogos.php">Cadastrar Jogo</a>
+					<a class="dropdown-item" href="cad_copas.php">Cadastrar Copa</a>
 					<a class="dropdown-item" href="atualizar_resultados.php">Atualizar Resultados de Jogos</a>
 				</div>
 			</li>
@@ -36,9 +39,20 @@
 				</a>
 				<div class="dropdown-menu">
 					<a class="dropdown-item" href="jogos_apostar.php">Novo Bilhete</a>
-					<a class="dropdown-item" href="consultar_bilhete.php">Consultar Bilhete</a>
+					<a class="dropdown-item" href="ganhadores.php">Consultar Ganhadores</a>
+					<a class="dropdown-item" href="perdedores.php">Perdedores</a>
 				</div>
-			</li>			
+			</li>
+
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+					Cliente
+				</a>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="pagamentos.php">Pagamentos</a>
+					<a class="dropdown-item" href="cad_usuario.php">Cadastrar Usuário</a>
+				</div>				
+			</li>						
 
 		</ul>
 	</nav>
