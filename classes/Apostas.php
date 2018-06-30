@@ -3,41 +3,26 @@ require_once("Sql.php");
 
 class Apostas {
 
-	public function criarBilhete($cliente, $totalCotas, $valorApostado, $retorno, $situacao, $jogos){
-
-		echo "
-		<pre>
-		$cliente
-		$totalCotas
-		$valorApostado
-		$retorno
-		$situacao
-		</pre>";
-		echo "<br><br>";
-		print_r($jogos);
-
-		//Arredonda o valor das variaveis e limita para 2 decimais
-		$totalCotas = number_format(floatval($totalCotas), 2, ".", ".");
-		$retorno1 = number_format(floatval($retorno), 2, ".", ".");
+	public function criarBilhete($cliente, $totalCotas, $valorApostado, $retorno, $jogos){
 
 		//Gera um código único de bilhete
-		$codBilhete = strtoupper(substr(md5(date("YmdHis")), 1, 6));
+		$codBilhete = strtoupper(substr(md5(date("YmdHis")), 1, 6));		
 
 		$sql = new Sql();
 
 		$sql->query("INSERT INTO apostas (cod_bilhete, cliente, cotas, valor_aposta, retorno, situacao, data_bilhete, status_pagamento) VALUES (:CODBILHETE, :CLIENTE, :COTAS, :VALORAPOSTA, :RETORNO, :SITUACAO, :DATA, :STATUS);", array(
-			":CODBILHETE" => $codBilhete,
+			":CODBILHETE" => utf8_decode($codBilhete),
 			":CLIENTE" => utf8_decode($cliente),
 			":COTAS" => $totalCotas,
 			":VALORAPOSTA" => $valorApostado,
-			":RETORNO" => $retorno1,
-			":SITUACAO" => $situacao,
+			":RETORNO" => $retorno,
+			":SITUACAO" => "Pendente",
 			":DATA" => date('Y-m-d'),
 			":STATUS" => "Pendente"
 		));
 
-		$sql->query("INSERT INTO valor_apostas (fk_cod_bilhete, valor_aposta, data_aposta) VALUES (:FKCODBILHETE, :VALORAPOSTA, :DATA);", array(
-			":FKCODBILHETE" => $codBilhete,
+		$sql->query("INSERT INTO valor_apostas (situacao, valor_aposta, data_aposta) VALUES (:SITUACAO, :VALORAPOSTA, :DATA);", array(
+			":SITUACAO" => "Concluido",
 			":VALORAPOSTA" => $valorApostado,
 			":DATA" => date('Y-m-d')
 		));
@@ -62,16 +47,28 @@ class Apostas {
 		}
 	}
 
-	public function gerarGanhadores(){
+	public function verificarBilhete($codBilhete){
 		
 		$sql = new Sql();
 
-		//Seleciona todos os bilhetes
-		$bilhetes = $sql->select("SELECT cod_bilhete FROM apostas;");
+		$bilheteExiste = $sql->select("SELECT * FROM apostas WHERE cod_bilhete = :CODBILHETE;", array(
+			":CODBILHETE" => utf8_decode($codBilhete)
+		));
 
-		foreach ($bilhetes as $codBilhete) {
+		if (count($bilheteExiste) == 0) {
+			$alert = "Código de bilhete não encontrado, verifique se digitou corretamente e tente novamente!";
+			return $alert;
+			exit();
+		}		
+
+		if ($bilheteExiste[0]['data_bilhete'] == date('Y-m-d')) {
+			return false;
+			exit();
+		}
+		else {
+
 			$jogosBilhete = $sql->select("SELECT * FROM ap_jogos WHERE fk_cod_bilhete = :CODBILHETE;", array(
-				":CODBILHETE" => $codBilhete['cod_bilhete']
+				":CODBILHETE" => utf8_decode($codBilhete)
 			));	
 
 			$situacaoJogo = true;
@@ -79,10 +76,11 @@ class Apostas {
 			for ($i=0; $i < count($jogosBilhete); $i++) { 
 				if ($jogosBilhete[$i]['situacao'] === "Pendente") {
 					$situacaoJogo = false;
-				}
+					break;			
+				}				
 
 				if ($situacaoJogo == true) {
-					
+
 					$infoJogo = $sql->select("SELECT esc_1, esc_2, esc_3, esc_4 FROM jogos WHERE id = :ID;", array(
 						":ID" => $jogosBilhete[$i]['jogo']
 					));
@@ -92,19 +90,21 @@ class Apostas {
 						$sql->query("UPDATE apostas SET situacao = :SITUACAO, status_pagamento = :STATUS WHERE cod_bilhete = :BILHETE;", array(
 							":SITUACAO" => "Perdeu",
 							":STATUS" => "Pendente",
-							":BILHETE" => $codBilhete['cod_bilhete']
+							":BILHETE" => utf8_decode($codBilhete)
 						));
+					
 						break;
 
 					}
 					else {
 						$sql->query("UPDATE apostas SET situacao = :SITUACAO WHERE cod_bilhete = :BILHETE;", array(
 							":SITUACAO" => "Ganhou",
-							":BILHETE" => $codBilhete['cod_bilhete']
-						));						
-					}				
+							":BILHETE" => utf8_decode($codBilhete)
+						));																			
+					}					
 				}
-			}					
+			}
+			return true;
 		}
 	}
 
@@ -118,29 +118,15 @@ class Apostas {
 		));
 	}
 
-	public function exibirGanhadores($data){
+	public function exibirBilhete($codBilhete){
 
 		$sql = new Sql();
 
-		$ganhadores = $sql->select("SELECT a.*, GROUP_CONCAT(jogo SEPARATOR ',') AS ap_jogos FROM apostas as a INNER JOIN ap_jogos as aj ON a.cod_bilhete = aj.fk_cod_bilhete  WHERE a.situacao = :SITUACAO AND data_bilhete = :DATA GROUP BY a.cod_bilhete ORDER BY status_pagamento = :STATUS DESC;", array(
-			":SITUACAO" => "Ganhou",
-			":DATA" => $data,
-			":STATUS" => "Pendente"
+		$bilhete = $sql->select("SELECT * FROM apostas WHERE cod_bilhete = :CODBILHETE;", array(
+			":CODBILHETE" => utf8_decode($codBilhete)
 		));	
 
-		return $ganhadores;
-	}
-
-	public function exibirPerdedores($data){
-
-		$sql = new Sql();
-
-		$perdedores = $sql->select("SELECT a.*, GROUP_CONCAT(jogo SEPARATOR ',') AS ap_jogos FROM apostas as a INNER JOIN ap_jogos as aj ON a.cod_bilhete = aj.fk_cod_bilhete  WHERE a.situacao = :SITUACAO AND data_bilhete = :DATA GROUP BY a.cod_bilhete ;", array(
-			":SITUACAO" => "Perdeu",
-			":DATA" => $data
-		));	
-
-		return $perdedores;
+		return $bilhete;
 	}
 
 }

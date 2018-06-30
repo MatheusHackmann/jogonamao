@@ -143,8 +143,6 @@ class Jogos{
 			":SITUACAO" => "Concluido",
 			":IDJOGO" => $id
 		));		
-
-
 		header("Location: atualizar_resultados.php");
 	}
 }

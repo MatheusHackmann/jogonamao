@@ -1,6 +1,4 @@
-<?php require_once("header.php"); ?>
-
-<?php
+<?php 
 require_once("../classes/Jogos.php");
 
 $times = $_GET['times'];
@@ -13,6 +11,12 @@ if ($_POST) {
 	$attResultado->atualizarResultado($idJogo, $_POST['gol_casa'], $_POST['gol_fora']);
 }
 
+require_once("header.php");
+if (!isset($_SESSION['acesso'])) {
+	session_destroy();
+	session_unset();
+	header("location: ../index.php");
+}
 ?>
 
 <div class="container">

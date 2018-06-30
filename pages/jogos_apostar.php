@@ -1,4 +1,11 @@
-<?php require_once("header.php"); ?>
+<?php require_once("header.php"); 
+
+if (!isset($_SESSION['acesso'])) {
+	session_destroy();
+	session_unset();
+	header("location: ../index.php");
+}
+?>
 
 <style type="text/css">
 .bilhete {
@@ -19,7 +26,7 @@
 			if ($_POST) {
 				$criarBilhete = new Apostas();
 
-				$criarBilhete->criarBilhete($_POST['cliente'], $_POST['valor_cotas'], $_POST['valor'], $_POST['possivel_retorno'], "Pendente", $_POST['apostas']);
+				$criarBilhete->criarBilhete($_POST['cliente'], $_POST['valor_cotas'], $_POST['valor'], $_POST['possivel_retorno'], $_POST['apostas']);
 			}
 			?>
 
@@ -145,8 +152,8 @@
 							</thead>
 							<tbody>
 							<tr>
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Impar','1.10','".$dataHora."','".$jogo['id']."')\">1.10</button></td>
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Par','1.10','".$dataHora."','".$jogo['id']."')\">1.10</button></td>
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Impar','1.10','".$dataHora."','".$jogo['id']."')\">1.10</button></td>
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Par','1.10','".$dataHora."','".$jogo['id']."')\">1.10</button></td>
 							</tr>
 							</tbody>
 
@@ -158,8 +165,8 @@
 							</thead>
 							<tbody>
 							<tr>
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Ambas marcam: Sim','1.50','".$dataHora."','".$jogo['id']."')\">1.50</button></td>
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Ambas marcam: Não','1.30','".$dataHora."','".$jogo['id']."')\">1.30</button></td>
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Ambas marcam: Sim','1.50','".$dataHora."','".$jogo['id']."')\">1.50</button></td>
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Ambas marcam: Não','1.30','".$dataHora."','".$jogo['id']."')\">1.30</button></td>
 							</tr>
 							</tbody>
 
@@ -176,35 +183,35 @@
 							<tr>";
 
 							echo "
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','0x0','6.70','".$dataHora."','".$jogo['id']."')\">0x0 - 6.70</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','0x1','4.80','".$dataHora."','".$jogo['id']."')\">0x1 - 4.80</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','0x2','5.60','".$dataHora."','".$jogo['id']."')\">0x2 - 5.60</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','0x3','8.30','".$dataHora."','".$jogo['id']."')\">0x3 - 8.30</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','0x4','25.40','".$dataHora."','".$jogo['id']."')\">0x4 - 25.40</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','0x0','6.70','".$dataHora."','".$jogo['id']."')\">0x0 - 6.70</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','0x1','4.80','".$dataHora."','".$jogo['id']."')\">0x1 - 4.80</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','0x2','5.60','".$dataHora."','".$jogo['id']."')\">0x2 - 5.60</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','0x3','8.30','".$dataHora."','".$jogo['id']."')\">0x3 - 8.30</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','0x4','25.40','".$dataHora."','".$jogo['id']."')\">0x4 - 25.40</button></td>
 							</tr>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','1x0','7.20','".$dataHora."','".$jogo['id']."')\">1x0 - 7.20</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','1x1','3.60','".$dataHora."','".$jogo['id']."')\">1x1 - 3.60</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','1x2','5.30','".$dataHora."','".$jogo['id']."')\">1x2 - 5.30</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','1x3','10.30','".$dataHora."','".$jogo['id']."')\">1x3 - 10.30</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','1x4','27.40','".$dataHora."','".$jogo['id']."')\">1x4 - 27.40</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','1x0','7.20','".$dataHora."','".$jogo['id']."')\">1x0 - 7.20</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','1x1','3.60','".$dataHora."','".$jogo['id']."')\">1x1 - 3.60</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','1x2','5.30','".$dataHora."','".$jogo['id']."')\">1x2 - 5.30</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','1x3','10.30','".$dataHora."','".$jogo['id']."')\">1x3 - 10.30</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','1x4','27.40','".$dataHora."','".$jogo['id']."')\">1x4 - 27.40</button></td>
 							</tr>							
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','2x0','17.00','".$dataHora."','".$jogo['id']."')\">2x0 - 17.00</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','2x1','9.40','".$dataHora."','".$jogo['id']."')\">2x1 - 9.40</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','2x2','10.30','".$dataHora."','".$jogo['id']."')\">2x2 - 10.30</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','2x3','22.70','".$dataHora."','".$jogo['id']."')\">2x3 - 22.70</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','2x4','50.00','".$dataHora."','".$jogo['id']."')\">2x4 - 50.00</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','2x0','17.00','".$dataHora."','".$jogo['id']."')\">2x0 - 17.00</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','2x1','9.40','".$dataHora."','".$jogo['id']."')\">2x1 - 9.40</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','2x2','10.30','".$dataHora."','".$jogo['id']."')\">2x2 - 10.30</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','2x3','22.70','".$dataHora."','".$jogo['id']."')\">2x3 - 22.70</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','2x4','50.00','".$dataHora."','".$jogo['id']."')\">2x4 - 50.00</button></td>
 							</tr>							
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','3x0','43.50','".$dataHora."','".$jogo['id']."')\">3x0 - 43.50</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','3x1','30.20','".$dataHora."','".$jogo['id']."')\">3x1 - 30.20</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','3x2','35.90','".$dataHora."','".$jogo['id']."')\">3x2 - 35.90</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','3x3','60.70','".$dataHora."','".$jogo['id']."')\">3x3 - 60.70</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','3x4','70.40','".$dataHora."','".$jogo['id']."')\">3x4 - 70.40</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','3x0','43.50','".$dataHora."','".$jogo['id']."')\">3x0 - 43.50</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','3x1','30.20','".$dataHora."','".$jogo['id']."')\">3x1 - 30.20</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','3x2','35.90','".$dataHora."','".$jogo['id']."')\">3x2 - 35.90</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','3x3','60.70','".$dataHora."','".$jogo['id']."')\">3x3 - 60.70</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','3x4','70.40','".$dataHora."','".$jogo['id']."')\">3x4 - 70.40</button></td>
 							</tr>							
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','4x0','100.00','".$dataHora."','".$jogo['id']."')\">4x0 - 100.00</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','4x1','120.50','".$dataHora."','".$jogo['id']."')\">4x1 - 120.50</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','4x2','135.40','".$dataHora."','".$jogo['id']."')\">4x2 - 135.40</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','4x3','150.90','".$dataHora."','".$jogo['id']."')\">4x3 - 150.90</button></td>
-							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','4x4','160.60','".$dataHora."','".$jogo['id']."')\">4x4 - 160.60</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','4x0','100.00','".$dataHora."','".$jogo['id']."')\">4x0 - 100.00</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','4x1','120.50','".$dataHora."','".$jogo['id']."')\">4x1 - 120.50</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','4x2','135.40','".$dataHora."','".$jogo['id']."')\">4x2 - 135.40</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','4x3','150.90','".$dataHora."','".$jogo['id']."')\">4x3 - 150.90</button></td>
+							<td style='width: 50px;'><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','4x4','160.60','".$dataHora."','".$jogo['id']."')\">4x4 - 160.60</button></td>
 							</tr>							
 							</tbody>														
 
@@ -218,15 +225,15 @@
 
 								//Aposta Casa
 							echo "
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Casa','".$jogo['ap_casa']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_casa']."</button></td>";
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Casa','".$jogo['ap_casa']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_casa']."</button></td>";
 
 								//Aposta Empate
 							echo "
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Empate','".$jogo['ap_empate']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_empate']."</button></td>";
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Empate','".$jogo['ap_empate']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_empate']."</button></td>";
 
 								//Aposta Fora
 							echo "
-							<td><button class='options btn' onclick=\"addAposta('".$jogo['time_casa']."','".$jogo['time_fora']."','Fora','".$jogo['ap_fora']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_fora']."</button></td>";
+							<td><button class='options btn' onclick=\"addAposta('".utf8_encode($jogo['time_casa'])."','".utf8_encode($jogo['time_fora'])."','Fora','".$jogo['ap_fora']."','".$dataHora."','".$jogo['id']."')\">".$jogo['ap_fora']."</button></td>";
 
 							echo "
 							<td style='width: 70%;text-align: right;'><b>".utf8_encode($jogo['time_casa'])." X ".utf8_encode($jogo['time_fora'])."</b><br><i style='color: #1976D2;'>".$dataHora."</i></td>";							

@@ -1,4 +1,11 @@
-<?php require_once("header.php"); ?>
+<?php require_once("header.php");
+
+if (!isset($_SESSION['acesso'])) {
+	session_destroy();
+	session_unset();
+	header("location: ../index.php");
+}
+?>
 
 <?php 
 require_once("../classes/Jogos.php");

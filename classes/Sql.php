@@ -2,10 +2,10 @@
 
 class Sql {
 
-	const HOSTNAME = "127.0.0.1";
-	const USERNAME = "root";
-	const PASSWORD = "";
-	const DBNAME = "jogonamao";
+	const HOSTNAME = "localhost";
+	const USERNAME = "id5976178_root123";
+	const PASSWORD = "root123";
+	const DBNAME = "id5976178_jogonamao";
 
 	private $conn;
 

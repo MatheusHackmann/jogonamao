@@ -1,5 +1,4 @@
-<?php date_default_timezone_set('America/Sao_Paulo'); ?>
-
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,21 +16,31 @@
 
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 		<!-- Brand -->
-		<a class="navbar-brand" href="#">Logo</a>
+		<a class="navbar-brand" href="#"><?php echo "Jogo na Mão" ?></a>
 
 		<!-- Links -->
 		<ul class="navbar-nav">
 
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="" id="navbardrop" data-toggle="dropdown">
+			<?php
+			date_default_timezone_set('America/Sao_Paulo');
+			session_start();
+			if (isset($_SESSION['acesso'])) {
+				if ($_SESSION['acesso'] === "Adm") {
+					echo "
+					<li class='nav-item dropdown'>
+					<a class='nav-link dropdown-toggle' href='' id='navbardrop' data-toggle='dropdown'>
 					Jogos
-				</a>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="cad_jogos.php">Cadastrar Jogo</a>
-					<a class="dropdown-item" href="cad_copas.php">Cadastrar Copa</a>
-					<a class="dropdown-item" href="atualizar_resultados.php">Atualizar Resultados de Jogos</a>
-				</div>
-			</li>
+					</a>
+					<div class='dropdown-menu'>
+					<a class='dropdown-item' href='cad_jogos.php'>Cadastrar Jogo</a>
+					<a class='dropdown-item' href='cad_copas.php'>Cadastrar Copa</a>
+					<a class='dropdown-item' href='atualizar_resultados.php'>Atualizar Resultados de Jogos</a>
+					</div>
+					</li>
+					";
+				}
+			}
+			?>
 
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -39,20 +48,23 @@
 				</a>
 				<div class="dropdown-menu">
 					<a class="dropdown-item" href="jogos_apostar.php">Novo Bilhete</a>
-					<a class="dropdown-item" href="ganhadores.php">Consultar Ganhadores</a>
-					<a class="dropdown-item" href="perdedores.php">Perdedores</a>
+					<a class="dropdown-item" href="bilhetes.php">Consultar Bilhetes</a>
 				</div>
 			</li>
 
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+			
+			<li class='nav-item dropdown'>
+				<a class='nav-link dropdown-toggle' href='#' id='navbardrop' data-toggle='dropdown'>
 					Cliente
 				</a>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="pagamentos.php">Pagamentos</a>
-					<a class="dropdown-item" href="cad_usuario.php">Cadastrar Usuário</a>
+				<div class='dropdown-menu'>
+					<a class='dropdown-item' href='pagamentos.php'>Pagamentos</a>
 				</div>				
-			</li>						
+			</li>
+
+			<a class='nav-link' href='logout.php'>
+				Sair
+			</a>			
 
 		</ul>
 	</nav>
